@@ -22,7 +22,7 @@ MiddleOut is a lightweight macOS background utility that converts and compresses
 | Input | Output |
 |-------|--------|
 | .heic, .png, .tiff, .webp, .jpg | Single `originalName_opt.jpg` in same directory |
-| .pdf | Folder `originalName_pages/` containing `page_1.jpg`, `page_2.jpg`... |
+| .pdf | Folder `originalName_pages/` containing `originalName_page_1.jpg`, `originalName_page_2.jpg`... |
 | Anything else | Skipped with reason shown in progress panel |
 
 ### File Type Validation
@@ -32,7 +32,7 @@ Extension is used for initial routing, but the real type is verified by attempti
 ### Output Naming
 
 - Images: `originalName_opt.jpg` in the same directory as the source
-- PDFs: `originalName_pages/page_1.jpg`, `page_2.jpg`... in the same directory as the source
+- PDFs: `originalName_pages/originalName_page_1.jpg`, `originalName_page_2.jpg`... in the same directory as the source
 - If `_opt.jpg` already exists: increment to `_opt_2.jpg`, `_opt_3.jpg`...
 - Original files are never modified or deleted
 
@@ -126,6 +126,11 @@ Auto-dismiss after 2 seconds
 All other functionality uses Apple's native frameworks (ImageIO, PDFKit, AppKit, SwiftUI). No other third-party dependencies.
 
 ## UI Design
+
+> **Visual Mockups:** Interactive HTML mockups are available in [`mockups/`](mockups/) for reference during implementation. Open them in a browser to see the exact design:
+> - [Architecture Overview](mockups/architecture.html)
+> - [Settings Window](mockups/settings-window.html)
+> - [Progress Panel](mockups/progress-panel.html)
 
 ### Settings Window
 
