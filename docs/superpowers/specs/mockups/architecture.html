@@ -1,3 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiddleOut - System Architecture</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    background: #1a1a2e; color: #e0e0e0; padding: 2rem;
+    min-height: 100vh;
+  }
+  h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; color: #fff; }
+  h3 { font-size: 1.1rem; font-weight: 600; color: #fff; }
+  .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .mockup {
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; overflow: hidden;
+    background: rgba(255,255,255,0.03);
+  }
+  .mockup-header {
+    background: rgba(255,255,255,0.06);
+    padding: 0.6rem 1rem; font-size: 0.8rem;
+    font-weight: 600; color: #aaa;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .mockup-body { padding: 1.5rem; }
+  .section { margin-top: 1.5rem; }
+  strong { color: #fff; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 8px; color: #fff; }
+  td { padding: 8px; }
+  thead tr { border-bottom: 2px solid rgba(255,255,255,0.15); }
+  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.08); }
+  tbody tr:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
 <h2>MiddleOut - System Architecture</h2>
 <p class="subtitle">Module breakdown and data flow</p>
 
@@ -56,65 +97,68 @@
 
 <div class="section" style="margin-top: 1.5rem;">
   <h3>Module Responsibilities</h3>
-  <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+  <table>
     <thead>
-      <tr style="border-bottom: 2px solid rgba(255,255,255,0.15);">
-        <th style="text-align: left; padding: 8px;">Module</th>
-        <th style="text-align: left; padding: 8px;">Framework</th>
-        <th style="text-align: left; padding: 8px;">Responsibility</th>
+      <tr>
+        <th>Module</th>
+        <th>Framework</th>
+        <th>Responsibility</th>
       </tr>
     </thead>
     <tbody>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">AppDelegate</td>
-        <td style="padding: 8px;">AppKit</td>
-        <td style="padding: 8px;">App lifecycle, agent mode, relaunch detection, window management</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">HotkeyManager</td>
-        <td style="padding: 8px;">KeyboardShortcuts</td>
-        <td style="padding: 8px;">Register global hotkey, trigger processing pipeline</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">FinderBridge</td>
-        <td style="padding: 8px;">NSAppleScript</td>
-        <td style="padding: 8px;">Get selected file URLs from Finder</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">FileRouter</td>
-        <td style="padding: 8px;">Foundation</td>
-        <td style="padding: 8px;">Classify files by extension, dispatch to correct processor</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">ImageProcessor</td>
-        <td style="padding: 8px;">ImageIO / UTI</td>
-        <td style="padding: 8px;">Convert any supported image to compressed JPG</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">PDFProcessor</td>
-        <td style="padding: 8px;">PDFKit + ImageIO</td>
-        <td style="padding: 8px;">Render each PDF page to JPG, output to named folder</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">ProgressPanel</td>
-        <td style="padding: 8px;">AppKit (NSPanel)</td>
-        <td style="padding: 8px;">Floating progress bar, skip messages, auto-dismiss</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">SoundPlayer</td>
-        <td style="padding: 8px;">NSSound</td>
-        <td style="padding: 8px;">Play completion chime</td>
-      </tr>
-      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <td style="padding: 8px; font-weight: bold;">SettingsView</td>
-        <td style="padding: 8px;">SwiftUI</td>
-        <td style="padding: 8px;">Hotkey binding, quality slider + presets, launch at login, about</td>
+      <tr>
+        <td style="font-weight: bold;">AppDelegate</td>
+        <td>AppKit</td>
+        <td>App lifecycle, agent mode, relaunch detection, window management</td>
       </tr>
       <tr>
-        <td style="padding: 8px; font-weight: bold;">SettingsStore</td>
-        <td style="padding: 8px;">@AppStorage</td>
-        <td style="padding: 8px;">Persist quality setting, hotkey state, login toggle</td>
+        <td style="font-weight: bold;">HotkeyManager</td>
+        <td>KeyboardShortcuts</td>
+        <td>Register global hotkey, trigger processing pipeline</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">FinderBridge</td>
+        <td>NSAppleScript</td>
+        <td>Get selected file URLs from Finder</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">FileRouter</td>
+        <td>Foundation</td>
+        <td>Classify files by extension, dispatch to correct processor</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">ImageProcessor</td>
+        <td>ImageIO / UTI</td>
+        <td>Convert any supported image to compressed JPG</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">PDFProcessor</td>
+        <td>PDFKit + ImageIO</td>
+        <td>Render each PDF page to JPG, output to named folder</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">ProgressPanel</td>
+        <td>AppKit (NSPanel)</td>
+        <td>Floating progress bar, skip messages, auto-dismiss</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">SoundPlayer</td>
+        <td>NSSound</td>
+        <td>Play completion chime</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">SettingsView</td>
+        <td>SwiftUI</td>
+        <td>Hotkey binding, quality slider + presets, launch at login, about</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">SettingsStore</td>
+        <td>@AppStorage</td>
+        <td>Persist quality setting, hotkey state, login toggle</td>
       </tr>
     </tbody>
   </table>
 </div>
+
+</body>
+</html>

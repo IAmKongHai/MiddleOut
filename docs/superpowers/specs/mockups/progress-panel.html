@@ -1,10 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiddleOut - Progress Panel Mockup</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    background: #1a1a2e; color: #e0e0e0; padding: 2rem;
+    min-height: 100vh;
+  }
+  h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; color: #fff; }
+  h3 { font-size: 1.1rem; font-weight: 600; color: #fff; }
+  .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
+  .mockup {
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; overflow: hidden;
+    background: rgba(255,255,255,0.03);
+  }
+  .mockup-header {
+    background: rgba(255,255,255,0.06);
+    padding: 0.6rem 1rem; font-size: 0.8rem;
+    font-weight: 600; color: #aaa;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .mockup-body { padding: 1.5rem; }
+  .section { margin-top: 1.5rem; }
+  strong { color: #fff; }
+  ul { padding-left: 1.2rem; line-height: 1.8; }
+  li { margin-bottom: 0.2rem; }
+</style>
+</head>
+<body>
+
 <h2>MiddleOut - Progress Panel</h2>
 <p class="subtitle">Floating panel during file processing — similar to macOS Archive Utility</p>
 
 <div class="split">
   <div class="mockup">
     <div class="mockup-header">Processing State</div>
-    <div class="mockup-body" style="padding: 1.5rem; font-size: 13px;">
+    <div class="mockup-body" style="font-size: 13px;">
       <div style="background: rgba(30,30,30,0.95); border-radius: 12px; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.1);">
 
         <!-- App icon + title -->
@@ -37,7 +76,7 @@
 
   <div class="mockup">
     <div class="mockup-header">Completed State (auto-dismiss after 2s)</div>
-    <div class="mockup-body" style="padding: 1.5rem; font-size: 13px;">
+    <div class="mockup-body" style="font-size: 13px;">
       <div style="background: rgba(30,30,30,0.95); border-radius: 12px; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.1);">
 
         <!-- App icon + title -->
@@ -82,3 +121,6 @@
     <li><strong>Window size:</strong> ~360x160pt, non-resizable, no title bar buttons</li>
   </ul>
 </div>
+
+</body>
+</html>
