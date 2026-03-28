@@ -40,7 +40,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Entry point when user presses the global hotkey
     private func handleHotkeyPressed() {
-        // TODO: Will be wired to ProcessingCoordinator in Task 7
-        print("[MiddleOut] Hotkey pressed!")
+        do {
+            let urls = try FinderBridge.getSelection()
+            print("[MiddleOut] Selected \(urls.count) files:")
+            for url in urls {
+                print("  - \(url.path)")
+            }
+        } catch FinderBridgeError.permissionDenied {
+            print("[MiddleOut] Permission denied - need Automation access for Finder")
+        } catch {
+            print("[MiddleOut] Error: \(error)")
+        }
     }
 }
