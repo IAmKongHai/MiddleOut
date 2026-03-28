@@ -112,6 +112,7 @@
 			);
 			name = MiddleOut;
 			packageProductDependencies = (
+				8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */,
 			);
 			productName = MiddleOut;
 			productReference = 8EE5DBA02F785D860053ACE8 /* MiddleOut.app */;
@@ -196,6 +197,9 @@
 			mainGroup = 8EE5DB972F785D860053ACE8;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			packageReferences = (
+				8EE5DBCA2F785D880053ACE8 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
 			productRefGroup = 8EE5DBA12F785D860053ACE8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -575,6 +579,24 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8EE5DBCA2F785D880053ACE8 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KeyboardShortcuts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8EE5DB982F785D860053ACE8 /* Project object */;
 }

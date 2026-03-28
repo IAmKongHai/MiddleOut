@@ -3,6 +3,7 @@
 // and settings window show/hide.
 
 import AppKit
+import KeyboardShortcuts
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -10,6 +11,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+
+        // Start listening for global hotkey
+        HotkeyManager.shared.onHotkeyPressed = { [weak self] in
+            self?.handleHotkeyPressed()
+        }
+        HotkeyManager.shared.start()
+
         showSettingsWindow()
     }
 
@@ -28,5 +36,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         settingsWindowController?.showWindow(nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    /// Entry point when user presses the global hotkey
+    private func handleHotkeyPressed() {
+        // TODO: Will be wired to ProcessingCoordinator in Task 7
+        print("[MiddleOut] Hotkey pressed!")
     }
 }
