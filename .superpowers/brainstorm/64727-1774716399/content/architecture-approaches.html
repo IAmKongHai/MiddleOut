@@ -1,0 +1,86 @@
+<h2>MiddleOut - Architecture Approaches</h2>
+<p class="subtitle">Three approaches to structuring the app, with trade-offs for each</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Recommended: Pure AppKit + SwiftUI Settings</h3>
+      <p><strong>Architecture:</strong> AppDelegate-driven lifecycle, NSWindow for progress, SwiftUI only for Settings view</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Full control over window lifecycle (hide/show/close without quit)</li>
+            <li>NSPanel for progress popup — native, lightweight, auto-dismiss</li>
+            <li>Proven pattern for "agent" apps (no Dock, no Menu Bar)</li>
+            <li>Easiest to handle "relaunch = show settings" behavior</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>More AppKit boilerplate vs pure SwiftUI</li>
+            <li>Two UI paradigms (AppKit windows + SwiftUI views)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Pure SwiftUI App Lifecycle</h3>
+      <p><strong>Architecture:</strong> @main App struct with WindowGroup, SwiftUI-managed windows</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Modern, less code</li>
+            <li>Consistent UI framework throughout</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Poor control over "agent" lifecycle — hard to suppress initial window</li>
+            <li>WindowGroup doesn't support "close window but keep app alive" cleanly</li>
+            <li>Progress popup harder to implement as floating panel</li>
+            <li>Relaunch detection requires workarounds</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Hybrid: SwiftUI App + AppDelegate Adapter</h3>
+      <p><strong>Architecture:</strong> SwiftUI @main with @NSApplicationDelegateAdaptor, mix of both</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>SwiftUI entry point with AppKit escape hatch</li>
+            <li>Can use Settings scene for preferences (macOS 14+)</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Two lifecycle owners — subtle conflicts possible</li>
+            <li>Settings scene not available on macOS 13</li>
+            <li>Still needs AppKit for progress panel and agent behavior</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem; padding: 1.5rem; background: rgba(99,102,241,0.08); border-radius: 12px;">
+  <h3 style="margin-top:0;">My Recommendation: Option A</h3>
+  <p style="margin:0;">For a "pure background agent" app like MiddleOut, AppDelegate-driven lifecycle is the gold standard on macOS. It gives us precise control over: no Dock icon, no Menu Bar icon, window show/hide on relaunch, floating progress panel, and clean quit. SwiftUI is excellent for the settings UI, but shouldn't own the app lifecycle.</p>
+</div>

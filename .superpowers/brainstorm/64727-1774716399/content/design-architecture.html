@@ -1,0 +1,120 @@
+<h2>MiddleOut - System Architecture</h2>
+<p class="subtitle">Module breakdown and data flow</p>
+
+<div class="mockup">
+  <div class="mockup-header">Architecture Overview</div>
+  <div class="mockup-body" style="padding: 2rem; font-family: monospace; font-size: 13px; line-height: 1.8;">
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <span style="background: #6366f1; color: white; padding: 6px 16px; border-radius: 6px; font-weight: bold;">User presses Ctrl + Option + J</span>
+    </div>
+    <div style="text-align: center; margin-bottom: 0.5rem; color: #888;">&darr;</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+      <div style="border: 2px solid #6366f1; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-weight: bold; color: #6366f1; margin-bottom: 4px;">HotkeyManager</div>
+        <div style="font-size: 11px; color: #888;">KeyboardShortcuts</div>
+        <div style="font-size: 11px; color: #888;">Register / Listen</div>
+      </div>
+      <div style="border: 2px solid #f59e0b; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-weight: bold; color: #f59e0b; margin-bottom: 4px;">FinderBridge</div>
+        <div style="font-size: 11px; color: #888;">NSAppleScript</div>
+        <div style="font-size: 11px; color: #888;">Get Finder selection</div>
+      </div>
+      <div style="border: 2px solid #10b981; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-weight: bold; color: #10b981; margin-bottom: 4px;">FileRouter</div>
+        <div style="font-size: 11px; color: #888;">Route by extension</div>
+        <div style="font-size: 11px; color: #888;">.heic/.png/.pdf &rarr;</div>
+      </div>
+    </div>
+    <div style="text-align: center; margin-bottom: 0.5rem; color: #888;">&darr;</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+      <div style="border: 2px solid #ef4444; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-weight: bold; color: #ef4444; margin-bottom: 4px;">ImageProcessor</div>
+        <div style="font-size: 11px; color: #888;">ImageIO + CGImageDestination</div>
+        <div style="font-size: 11px; color: #888;">HEIC/PNG/TIFF/WEBP/JPG &rarr; JPG</div>
+      </div>
+      <div style="border: 2px solid #ef4444; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-weight: bold; color: #ef4444; margin-bottom: 4px;">PDFProcessor</div>
+        <div style="font-size: 11px; color: #888;">PDFKit + ImageIO</div>
+        <div style="font-size: 11px; color: #888;">PDF pages &rarr; JPG folder</div>
+      </div>
+    </div>
+    <div style="text-align: center; margin-bottom: 0.5rem; color: #888;">&darr;</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div style="border: 2px solid #8b5cf6; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-weight: bold; color: #8b5cf6; margin-bottom: 4px;">ProgressPanel</div>
+        <div style="font-size: 11px; color: #888;">NSPanel (floating)</div>
+        <div style="font-size: 11px; color: #888;">Progress bar + skip info</div>
+      </div>
+      <div style="border: 2px solid #8b5cf6; border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-weight: bold; color: #8b5cf6; margin-bottom: 4px;">SoundPlayer</div>
+        <div style="font-size: 11px; color: #888;">NSSound / AVAudioPlayer</div>
+        <div style="font-size: 11px; color: #888;">Completion chime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 1.5rem;">
+  <h3>Module Responsibilities</h3>
+  <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+    <thead>
+      <tr style="border-bottom: 2px solid rgba(255,255,255,0.15);">
+        <th style="text-align: left; padding: 8px;">Module</th>
+        <th style="text-align: left; padding: 8px;">Framework</th>
+        <th style="text-align: left; padding: 8px;">Responsibility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">AppDelegate</td>
+        <td style="padding: 8px;">AppKit</td>
+        <td style="padding: 8px;">App lifecycle, agent mode, relaunch detection, window management</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">HotkeyManager</td>
+        <td style="padding: 8px;">KeyboardShortcuts</td>
+        <td style="padding: 8px;">Register global hotkey, trigger processing pipeline</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">FinderBridge</td>
+        <td style="padding: 8px;">NSAppleScript</td>
+        <td style="padding: 8px;">Get selected file URLs from Finder</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">FileRouter</td>
+        <td style="padding: 8px;">Foundation</td>
+        <td style="padding: 8px;">Classify files by extension, dispatch to correct processor</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">ImageProcessor</td>
+        <td style="padding: 8px;">ImageIO / UTI</td>
+        <td style="padding: 8px;">Convert any supported image to compressed JPG</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">PDFProcessor</td>
+        <td style="padding: 8px;">PDFKit + ImageIO</td>
+        <td style="padding: 8px;">Render each PDF page to JPG, output to named folder</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">ProgressPanel</td>
+        <td style="padding: 8px;">AppKit (NSPanel)</td>
+        <td style="padding: 8px;">Floating progress bar, skip messages, auto-dismiss</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">SoundPlayer</td>
+        <td style="padding: 8px;">NSSound</td>
+        <td style="padding: 8px;">Play completion chime</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px; font-weight: bold;">SettingsView</td>
+        <td style="padding: 8px;">SwiftUI</td>
+        <td style="padding: 8px;">Hotkey binding, quality slider + presets, launch at login, about</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">SettingsStore</td>
+        <td style="padding: 8px;">@AppStorage</td>
+        <td style="padding: 8px;">Persist quality setting, hotkey state, login toggle</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

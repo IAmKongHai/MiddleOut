@@ -1,0 +1,84 @@
+<h2>MiddleOut - Progress Panel</h2>
+<p class="subtitle">Floating panel during file processing — similar to macOS Archive Utility</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Processing State</div>
+    <div class="mockup-body" style="padding: 1.5rem; font-size: 13px;">
+      <div style="background: rgba(30,30,30,0.95); border-radius: 12px; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.1);">
+
+        <!-- App icon + title -->
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px;">M</div>
+          <div>
+            <div style="font-weight: bold; font-size: 13px;">MiddleOut</div>
+            <div style="color: #888; font-size: 11px;">Processing 5 files...</div>
+          </div>
+        </div>
+
+        <!-- Current file -->
+        <div style="color: #ccc; font-size: 12px; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          Converting: vacation_photo.heic &rarr; vacation_photo_opt.jpg
+        </div>
+
+        <!-- Progress bar -->
+        <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 8px;">
+          <div style="width: 60%; height: 100%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 3px; transition: width 0.3s;"></div>
+        </div>
+
+        <!-- Stats -->
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888;">
+          <span>3 of 5 completed</span>
+          <span>Saved 4.2 MB</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Completed State (auto-dismiss after 2s)</div>
+    <div class="mockup-body" style="padding: 1.5rem; font-size: 13px;">
+      <div style="background: rgba(30,30,30,0.95); border-radius: 12px; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.1);">
+
+        <!-- App icon + title -->
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 16px;">&check;</div>
+          <div>
+            <div style="font-weight: bold; font-size: 13px; color: #10b981;">Done!</div>
+            <div style="color: #888; font-size: 11px;">5 files processed</div>
+          </div>
+        </div>
+
+        <!-- Progress bar full -->
+        <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 8px;">
+          <div style="width: 100%; height: 100%; background: #10b981; border-radius: 3px;"></div>
+        </div>
+
+        <!-- Summary -->
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888;">
+          <span>4 converted &middot; 1 skipped</span>
+          <span>Total saved: 8.7 MB</span>
+        </div>
+
+        <!-- Skipped detail -->
+        <div style="margin-top: 8px; padding: 6px 8px; background: rgba(245,158,11,0.1); border-radius: 6px; font-size: 11px; color: #f59e0b;">
+          Skipped: report.docx (unsupported format)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(99,102,241,0.08); border-radius: 12px;">
+  <h3 style="margin-top: 0;">Behavior Notes</h3>
+  <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.8;">
+    <li><strong>NSPanel with .floating level</strong> — always on top, no Dock icon</li>
+    <li><strong>Appears instantly</strong> when processing starts, positioned at screen top-center</li>
+    <li><strong>Shows current file</strong> being processed and overall progress (X of N)</li>
+    <li><strong>Shows space saved</strong> — running total of bytes saved during this batch</li>
+    <li><strong>Completed state:</strong> green checkmark, summary with skip details, <strong>auto-dismiss after 2 seconds</strong></li>
+    <li><strong>Skipped files:</strong> shown in amber/yellow at the bottom of the completed state</li>
+    <li><strong>Completion sound:</strong> plays when panel transitions to "Done!" state</li>
+    <li><strong>Window size:</strong> ~360x160pt, non-resizable, no title bar buttons</li>
+  </ul>
+</div>

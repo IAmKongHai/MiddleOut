@@ -1,0 +1,94 @@
+<h2>MiddleOut - Settings Window Mockup</h2>
+<p class="subtitle">The only UI surface — appears when user relaunches the app</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Tab 1: General</div>
+    <div class="mockup-body" style="padding: 1.5rem; font-size: 13px;">
+
+      <!-- Hotkey Section -->
+      <div style="margin-bottom: 1.5rem;">
+        <div style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Global Shortcut</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 16px; font-family: monospace; font-size: 14px; letter-spacing: 1px;">
+            &#8963; &#8997; J
+          </div>
+          <span style="color: #888; font-size: 12px;">Click to change</span>
+        </div>
+      </div>
+
+      <!-- Quality Section -->
+      <div style="margin-bottom: 1.5rem;">
+        <div style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">JPEG Quality</div>
+        <!-- Preset Buttons -->
+        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+          <div style="padding: 5px 14px; border-radius: 6px; font-size: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); cursor: pointer;">Low 40%</div>
+          <div style="padding: 5px 14px; border-radius: 6px; font-size: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); cursor: pointer;">Medium 60%</div>
+          <div style="padding: 5px 14px; border-radius: 6px; font-size: 12px; background: #6366f1; color: white; border: 1px solid #6366f1; cursor: pointer; font-weight: bold;">High 80%</div>
+        </div>
+        <!-- Slider -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="flex: 1; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; position: relative;">
+            <div style="width: 80%; height: 100%; background: #6366f1; border-radius: 2px;"></div>
+            <div style="position: absolute; right: 20%; top: -6px; width: 16px; height: 16px; background: white; border-radius: 50%; transform: translateX(50%); box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></div>
+          </div>
+          <span style="font-family: monospace; font-size: 14px; min-width: 36px; text-align: right;">80%</span>
+        </div>
+      </div>
+
+      <!-- Launch at Login -->
+      <div style="margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-weight: bold; font-size: 14px;">Launch at Login</span>
+          <div style="width: 40px; height: 22px; background: #6366f1; border-radius: 11px; position: relative;">
+            <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quit Button -->
+      <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; margin-top: 1rem;">
+        <div style="display: inline-block; padding: 6px 16px; background: rgba(239,68,68,0.15); color: #ef4444; border-radius: 6px; font-size: 13px; cursor: pointer;">Quit MiddleOut</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Tab 2: About</div>
+    <div class="mockup-body" style="padding: 1.5rem; font-size: 13px; text-align: center;">
+
+      <!-- App Icon Placeholder -->
+      <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 18px; margin: 1rem auto; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: white;">M</div>
+
+      <div style="font-weight: bold; font-size: 18px; margin-bottom: 4px;">MiddleOut</div>
+      <div style="color: #888; font-size: 13px; margin-bottom: 1.5rem;">Version 1.0.0</div>
+
+      <div style="color: #888; font-size: 12px; margin-bottom: 1rem; line-height: 1.6;">
+        A lightweight macOS tool that instantly<br>
+        converts and compresses images & PDFs<br>
+        — all triggered by a global hotkey.
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+        <a style="color: #6366f1; font-size: 13px; text-decoration: none; cursor: pointer;">GitHub Repository &rarr;</a>
+        <a style="color: #6366f1; font-size: 13px; text-decoration: none; cursor: pointer;">Report an Issue &rarr;</a>
+      </div>
+
+      <div style="color: #555; font-size: 11px; margin-top: 2rem;">
+        Inspired by the Middle-Out algorithm<br>
+        from HBO's <em>Silicon Valley</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(99,102,241,0.08); border-radius: 12px;">
+  <h3 style="margin-top: 0;">Design Notes</h3>
+  <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.8;">
+    <li><strong>Window size:</strong> ~400x350pt, fixed size, centered on screen</li>
+    <li><strong>Tabs:</strong> General (shortcuts + quality + login) and About (version + links)</li>
+    <li><strong>Preset buttons + slider are linked:</strong> clicking a preset moves the slider; dragging the slider deselects presets if value doesn't match</li>
+    <li><strong>Close window = hide</strong> (app stays alive in background)</li>
+    <li><strong>Only way to quit</strong> is the red "Quit MiddleOut" button</li>
+  </ul>
+</div>

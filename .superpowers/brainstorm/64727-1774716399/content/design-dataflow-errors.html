@@ -1,0 +1,92 @@
+<h2>MiddleOut - Data Flow & Error Handling</h2>
+<p class="subtitle">Complete pipeline from hotkey press to completion sound</p>
+
+<div class="mockup">
+  <div class="mockup-header">Processing Pipeline</div>
+  <div class="mockup-body" style="padding: 1.5rem; font-family: monospace; font-size: 12px; line-height: 2.2;">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <div><span style="color: #6366f1; font-weight: bold;">1.</span> User presses <span style="background: rgba(99,102,241,0.2); padding: 2px 8px; border-radius: 4px;">Ctrl + Option + J</span></div>
+      <div style="color: #555; padding-left: 20px;">&darr;</div>
+      <div><span style="color: #6366f1; font-weight: bold;">2.</span> <span style="color: #f59e0b;">HotkeyManager</span> fires callback</div>
+      <div style="color: #555; padding-left: 20px;">&darr;</div>
+      <div><span style="color: #6366f1; font-weight: bold;">3.</span> <span style="color: #f59e0b;">FinderBridge</span> runs AppleScript &rarr; returns <span style="color: #10b981;">[URL]</span></div>
+      <div style="color: #555; padding-left: 20px;">&darr; <span style="color: #ef4444; font-size: 11px;">empty? &rarr; play error sound, no panel</span></div>
+      <div><span style="color: #6366f1; font-weight: bold;">4.</span> <span style="color: #f59e0b;">FileRouter</span> classifies each URL:</div>
+      <div style="padding-left: 20px; color: #ccc;">
+        <div>.heic .png .tiff .webp .jpg &rarr; <span style="color: #10b981;">ImageProcessor</span></div>
+        <div>.pdf &rarr; <span style="color: #10b981;">PDFProcessor</span></div>
+        <div>others &rarr; <span style="color: #f59e0b;">skip list</span></div>
+      </div>
+      <div style="color: #555; padding-left: 20px;">&darr; <span style="color: #ef4444; font-size: 11px;">all skipped? &rarr; show panel with "no supported files"</span></div>
+      <div><span style="color: #6366f1; font-weight: bold;">5.</span> <span style="color: #8b5cf6;">ProgressPanel</span> appears &rarr; show total file count</div>
+      <div style="color: #555; padding-left: 20px;">&darr;</div>
+      <div><span style="color: #6366f1; font-weight: bold;">6.</span> Process each file sequentially on background thread:</div>
+      <div style="padding-left: 20px; color: #ccc;">
+        <div>a. Validate file content (magic bytes via CGImageSource / PDFDocument)</div>
+        <div style="color: #ef4444; font-size: 11px; padding-left: 12px;">&rarr; invalid? skip with "corrupted or mismatched format"</div>
+        <div>b. Convert / compress &rarr; write to <span style="color: #10b981;">originalName_opt.jpg</span></div>
+        <div style="color: #ef4444; font-size: 11px; padding-left: 12px;">&rarr; write failed? skip with "permission denied" or "disk full"</div>
+        <div>c. Update progress bar on main thread</div>
+      </div>
+      <div style="color: #555; padding-left: 20px;">&darr;</div>
+      <div><span style="color: #6366f1; font-weight: bold;">7.</span> All done &rarr; panel shows <span style="color: #10b981;">Done!</span> + summary</div>
+      <div style="color: #555; padding-left: 20px;">&darr;</div>
+      <div><span style="color: #6366f1; font-weight: bold;">8.</span> <span style="color: #8b5cf6;">SoundPlayer</span> plays completion chime</div>
+      <div style="color: #555; padding-left: 20px;">&darr;</div>
+      <div><span style="color: #6366f1; font-weight: bold;">9.</span> Panel auto-dismisses after 2 seconds</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 1.5rem;">
+  <h3>Error Handling Strategy</h3>
+  <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+    <thead>
+      <tr style="border-bottom: 2px solid rgba(255,255,255,0.15);">
+        <th style="text-align: left; padding: 8px;">Scenario</th>
+        <th style="text-align: left; padding: 8px;">Behavior</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px;">Finder not frontmost / no selection</td>
+        <td style="padding: 8px;">Play a short error sound. No panel appears.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px;">All files are unsupported formats</td>
+        <td style="padding: 8px;">Panel shows "No supported files in selection" then auto-dismiss.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px;">File extension faked (e.g. .docx renamed to .heic)</td>
+        <td style="padding: 8px;">CGImageSource/PDFDocument fails to open &rarr; skip with "corrupted or mismatched format"</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px;">File is locked / no read permission</td>
+        <td style="padding: 8px;">Skip with "cannot read file"</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px;">Output write fails (sandbox / disk full)</td>
+        <td style="padding: 8px;">Skip with "cannot write output"</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <td style="padding: 8px;">Output file already exists (name_opt.jpg)</td>
+        <td style="padding: 8px;">Append number: name_opt_2.jpg, name_opt_3.jpg...</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px;">AppleScript permission denied</td>
+        <td style="padding: 8px;">Show one-time alert: "MiddleOut needs Automation permission for Finder" with button to open System Settings</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section" style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(99,102,241,0.08); border-radius: 12px;">
+  <h3 style="margin-top: 0;">Key Design Decisions</h3>
+  <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.8;">
+    <li><strong>Sequential processing</strong> — one file at a time, simple and predictable progress</li>
+    <li><strong>Background thread</strong> — all I/O on a dedicated queue, UI updates on main thread</li>
+    <li><strong>Never crash, never block</strong> — every error is a "skip" with a human-readable reason</li>
+    <li><strong>PDF output:</strong> creates folder <code>filename_pages/</code> containing <code>page_1.jpg</code>, <code>page_2.jpg</code>...</li>
+    <li><strong>Duplicate prevention:</strong> if <code>_opt.jpg</code> already exists, increment suffix</li>
+  </ul>
+</div>
