@@ -40,18 +40,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Entry point when user presses the global hotkey
     private func handleHotkeyPressed() {
+        DebugLog.clear()
+        DebugLog.log("handleHotkeyPressed called")
+
         let coordinator = ProcessingCoordinator.shared
         let panel = ProgressPanel.shared
 
+        // Show panel immediately before processing starts
+        panel.show()
+
         coordinator.onProgress = { progress in
-            panel.show()
             panel.update(progress)
         }
 
         coordinator.onCompleted = { summary in
+            DebugLog.log("onCompleted callback: \(summary.convertedCount) converted")
             panel.showCompleted(summary)
         }
 
-        coordinator.start()
+        // Delay start slightly to let the panel render its first frame
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DebugLog.log("Starting coordinator after panel render delay")
+            coordinator.start()
+        }
     }
 }

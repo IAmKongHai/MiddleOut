@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="480px" height="480px" viewBox="0 0 480 480" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>AppIcon</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="AppIcon">
+            <rect id="矩形" fill="#FEC566" fill-rule="nonzero" x="0" y="0" width="480" height="480" rx="96"></rect>
+            <g id="编组" stroke-linecap="round" stroke-linejoin="round" transform="translate(165, 166) rotate(-90) translate(-165, -166)translate(105, 106)" stroke="#1F71D1" stroke-width="42">
+                <line x1="120" y1="0" x2="0" y2="120" id="路径"></line>
+                <polyline id="路径" points="0 20 0 120 100 120"></polyline>
+            </g>
+            <g id="编组" stroke-linecap="round" stroke-linejoin="round" transform="translate(327, 326) rotate(270) translate(-327, -326)translate(277, 276)" stroke="#D2282A" stroke-width="42">
+                <line x1="0" y1="100" x2="100" y2="0" id="路径"></line>
+                <polyline id="路径" points="100 83.3333333 100 0 16.6666667 0"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

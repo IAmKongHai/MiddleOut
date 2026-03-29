@@ -20,7 +20,7 @@ class ProgressViewController: NSViewController {
         self.view = container
 
         // App icon
-        let iconImage = NSImage(systemSymbolName: "arrow.down.right.and.arrow.up.left", accessibilityDescription: "MiddleOut")
+        let iconImage = NSImage(named: "AboutIcon") ?? NSImage(systemSymbolName: "arrow.down.right.and.arrow.up.left", accessibilityDescription: "MiddleOut")
         iconView.image = iconImage
         iconView.frame = NSRect(x: 16, y: 110, width: 32, height: 32)
         container.addSubview(iconView)
@@ -104,7 +104,7 @@ class ProgressViewController: NSViewController {
 
     /// Reset to initial state for reuse
     func reset() {
-        let iconImage = NSImage(systemSymbolName: "arrow.down.right.and.arrow.up.left", accessibilityDescription: "MiddleOut")
+        let iconImage = NSImage(named: "AboutIcon") ?? NSImage(systemSymbolName: "arrow.down.right.and.arrow.up.left", accessibilityDescription: "MiddleOut")
         iconView.image = iconImage
         iconView.contentTintColor = .labelColor
         titleLabel.stringValue = "MiddleOut"

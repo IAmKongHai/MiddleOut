@@ -35,36 +35,50 @@ class ProcessingCoordinator {
     private init() {}
 
     /// Start processing: get Finder selection and process all supported files.
+    /// Entire pipeline runs on a background queue to keep the main thread free for UI.
     func start() {
         guard !isProcessing else { return }
         isProcessing = true
 
-        // Get Finder selection on main thread (AppleScript)
+        DebugLog.log("coordinator.start() — dispatching to background queue")
+
+        queue.async { [weak self] in
+            guard let self else { return }
+            self.processOnBackground()
+        }
+    }
+
+    /// Background processing pipeline
+    private func processOnBackground() {
+        DebugLog.log("processOnBackground() started")
+
+        // Get Finder selection (AppleScript runs on background thread)
         let urls: [URL]
         do {
             urls = try FinderBridge.getSelection()
-            print("[MiddleOut] Finder selection: \(urls.count) files")
-            for url in urls {
-                print("[MiddleOut]   - \(url.path)")
-            }
+            DebugLog.log("Finder selection: \(urls.count) files")
         } catch FinderBridgeError.permissionDenied {
-            print("[MiddleOut] ERROR: Finder Automation permission denied")
-            isProcessing = false
+            DebugLog.log("ERROR: Finder Automation permission denied")
             DispatchQueue.main.async {
+                self.isProcessing = false
                 self.showPermissionAlert()
             }
             return
         } catch {
-            print("[MiddleOut] ERROR: FinderBridge failed: \(error)")
-            isProcessing = false
-            SoundPlayer.playError()
+            DebugLog.log("ERROR: FinderBridge failed: \(error)")
+            DispatchQueue.main.async {
+                self.isProcessing = false
+                SoundPlayer.playError()
+            }
             return
         }
 
         guard !urls.isEmpty else {
-            print("[MiddleOut] No files selected in Finder")
-            isProcessing = false
-            SoundPlayer.playError()
+            DebugLog.log("No files selected in Finder")
+            DispatchQueue.main.async {
+                self.isProcessing = false
+                SoundPlayer.playError()
+            }
             return
         }
 
@@ -74,78 +88,75 @@ class ProcessingCoordinator {
         var allSkipped = classified.skipped.map { ($0.url.lastPathComponent, $0.reason) }
 
         guard !allProcessable.isEmpty else {
-            isProcessing = false
             DispatchQueue.main.async {
+                self.isProcessing = false
                 self.onCompleted?(ProcessingSummary(
                     convertedCount: 0,
                     skippedFiles: allSkipped,
                     totalBytesSaved: 0
                 ))
+                SoundPlayer.playError()
             }
-            SoundPlayer.playError()
             return
         }
 
         let totalCount = allProcessable.count
         let quality = SettingsStore.shared.jpegQuality
+        DebugLog.log("Processing \(totalCount) files at quality \(quality)")
 
-        // Process on background queue
-        queue.async { [weak self] in
-            guard let self else { return }
+        var convertedCount = 0
+        var totalBytesSaved: Int64 = 0
 
-            var convertedCount = 0
-            var totalBytesSaved: Int64 = 0
+        for (index, url) in allProcessable.enumerated() {
+            let fileName = url.lastPathComponent
+            let currentBytesSaved = totalBytesSaved
 
-            for (index, url) in allProcessable.enumerated() {
-                let fileName = url.lastPathComponent
-
-                // Update progress on main thread
-                DispatchQueue.main.async {
-                    self.onProgress?(ProcessingProgress(
-                        currentFile: fileName,
-                        currentIndex: index,
-                        totalCount: totalCount,
-                        bytesSaved: totalBytesSaved
-                    ))
-                }
-
-                let ext = url.pathExtension.lowercased()
-                let isPDF = (ext == "pdf")
-
-                do {
-                    if isPDF {
-                        print("[MiddleOut] Processing PDF: \(fileName)")
-                        let results = try PDFProcessor.process(at: url, quality: quality)
-                        for result in results {
-                            totalBytesSaved += result.bytesSaved
-                        }
-                        convertedCount += 1
-                        print("[MiddleOut] PDF done: \(results.count) pages")
-                    } else {
-                        print("[MiddleOut] Processing image: \(fileName)")
-                        let result = try ImageProcessor.process(at: url, quality: quality)
-                        totalBytesSaved += result.bytesSaved
-                        convertedCount += 1
-                        print("[MiddleOut] Image done: \(result.outputURL.lastPathComponent), saved \(result.bytesSaved) bytes")
-                    }
-                } catch {
-                    let reason = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-                    print("[MiddleOut] ERROR processing \(fileName): \(reason)")
-                    allSkipped.append((fileName, reason))
-                }
-            }
-
-            let summary = ProcessingSummary(
-                convertedCount: convertedCount,
-                skippedFiles: allSkipped,
-                totalBytesSaved: totalBytesSaved
-            )
-
+            // Send progress update to main thread (async — don't block background processing)
             DispatchQueue.main.async {
-                self.isProcessing = false
-                self.onCompleted?(summary)
-                SoundPlayer.playComplete()
+                self.onProgress?(ProcessingProgress(
+                    currentFile: fileName,
+                    currentIndex: index,
+                    totalCount: totalCount,
+                    bytesSaved: currentBytesSaved
+                ))
             }
+
+            let ext = url.pathExtension.lowercased()
+            let isPDF = (ext == "pdf")
+
+            do {
+                if isPDF {
+                    DebugLog.log("Processing PDF: \(fileName)")
+                    let results = try PDFProcessor.process(at: url, quality: quality)
+                    for result in results {
+                        totalBytesSaved += result.bytesSaved
+                    }
+                    convertedCount += 1
+                } else {
+                    DebugLog.log("Processing image: \(fileName)")
+                    let result = try ImageProcessor.process(at: url, quality: quality)
+                    totalBytesSaved += result.bytesSaved
+                    convertedCount += 1
+                }
+            } catch {
+                let reason = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+                DebugLog.log("ERROR processing \(fileName): \(reason)")
+                allSkipped.append((fileName, reason))
+            }
+        }
+
+        let summary = ProcessingSummary(
+            convertedCount: convertedCount,
+            skippedFiles: allSkipped,
+            totalBytesSaved: totalBytesSaved
+        )
+
+        DebugLog.log("Processing complete: \(convertedCount) converted, \(allSkipped.count) skipped")
+
+        DispatchQueue.main.async {
+            self.isProcessing = false
+            self.onCompleted?(summary)
+            SoundPlayer.playComplete()
         }
     }
 

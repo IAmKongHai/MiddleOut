@@ -13,20 +13,11 @@ struct AboutTab: View {
         VStack(spacing: 12) {
             Spacer()
 
-            // App Icon
-            Image(systemName: "arrow.down.right.and.arrow.up.left")
+            // App Icon (from Assets.xcassets)
+            Image("AboutIcon")
                 .resizable()
-                .frame(width: 48, height: 48)
-                .padding(16)
-                .background(
-                    LinearGradient(
-                        colors: [.indigo, .purple],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .frame(width: 80, height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
-                .foregroundColor(.white)
 
             Text("MiddleOut")
                 .font(.title2.bold())
@@ -35,30 +26,32 @@ struct AboutTab: View {
                 .foregroundColor(.secondary)
                 .font(.caption)
 
-            Text("A lightweight macOS tool that instantly\nconverts and compresses images & PDFs\n— all triggered by a global hotkey.")
+            Text("A lightweight macOS tool that instantly converts and compresses images & PDFs — all triggered by a global hotkey.")
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .font(.caption)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.vertical, 4)
 
             // Links
             VStack(spacing: 6) {
                 Link("GitHub Repository →",
-                     destination: URL(string: "https://github.com/example/MiddleOut")!)
+                     destination: URL(string: "https://github.com/IAmKongHai/MiddleOut")!)
                     .font(.caption)
                 Link("Report an Issue →",
-                     destination: URL(string: "https://github.com/example/MiddleOut/issues")!)
+                     destination: URL(string: "https://github.com/IAmKongHai/MiddleOut/issues")!)
                     .font(.caption)
             }
 
             Spacer()
 
             // Easter egg
-            Text("Inspired by the Middle-Out algorithm\nfrom HBO's *Silicon Valley*")
+            Text("Inspired by the Middle-Out algorithm\nfrom HBO's Silicon Valley")
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary.opacity(0.6))
                 .font(.system(size: 10))
                 .italic()
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.bottom, 8)
         }
         .padding(20)
