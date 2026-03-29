@@ -2,11 +2,14 @@
 // Registers a global keyboard shortcut and fires a callback when pressed.
 // Uses KeyboardShortcuts library for Mac App Store-compatible hotkey handling.
 
-import Foundation
+import AppKit
 import KeyboardShortcuts
 
 extension KeyboardShortcuts.Name {
-    static let processFiles = Self("processFiles")
+    static let processFiles = Self(
+        "processFiles",
+        default: KeyboardShortcuts.Shortcut(.j, modifiers: [.control, .option])
+    )
 }
 
 class HotkeyManager {

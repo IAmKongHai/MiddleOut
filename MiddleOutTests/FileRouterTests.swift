@@ -46,4 +46,5 @@ final class FileRouterTests: XCTestCase {
         XCTAssertEqual(result.images.count, 1)
         XCTAssertEqual(result.pdfs.count, 1)
     }
+
 }
