@@ -41,9 +41,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// Entry point when user presses the global hotkey
     private func handleHotkeyPressed() {
         let coordinator = ProcessingCoordinator.shared
+        let panel = ProgressPanel.shared
+
+        coordinator.onProgress = { progress in
+            panel.show()
+            panel.update(progress)
+        }
 
         coordinator.onCompleted = { summary in
-            print("[MiddleOut] Done! \(summary.convertedCount) converted, \(summary.skippedFiles.count) skipped, saved \(summary.totalBytesSaved) bytes")
+            panel.showCompleted(summary)
         }
 
         coordinator.start()
