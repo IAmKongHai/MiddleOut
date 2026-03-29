@@ -1,6 +1,5 @@
 // SettingsWindowController.swift
-// Manages the NSWindow that hosts the SwiftUI SettingsView.
-// Closing the window hides it instead of destroying it.
+// Manages the settings window. Uses NSHostingView to embed SwiftUI SettingsView.
 
 import AppKit
 import SwiftUI
@@ -17,7 +16,7 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate {
         window.title = "MiddleOut Settings"
         window.center()
         window.isReleasedWhenClosed = false
-        window.contentView = NSHostingView(rootView: Text("Settings placeholder"))
+        window.contentView = NSHostingView(rootView: SettingsView())
 
         self.init(window: window)
         window.delegate = self
