@@ -26,6 +26,9 @@ DerivedData/
 .swiftpm/
 Packages/
 
+# Build output
+*.app
+
 # Debug log
 debug.log
 
@@ -37,3 +40,5 @@ development-screenshot/
 .traerules
 .cursorrules
 .github/copilot-instructions.md
+build_temp/
+*.dmg
