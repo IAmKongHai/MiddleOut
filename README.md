@@ -39,8 +39,6 @@ A floating progress panel shows real-time status — then disappears automatical
 - **Global Hotkey** — Works from anywhere, no need to switch apps. Default: `Ctrl + Option + J` (customizable)
 - **Image Conversion** — HEIC, PNG, TIFF, WebP to compressed JPG
 - **PDF to JPG** — Extracts every page as a separate JPG image
-- **Word to JPG** — Renders each page of .docx as a JPEG image
-- **Excel to JPG** — Renders each worksheet of .xlsx as a JPEG image
 - **Markdown to JPG** — Converts .md to mobile-friendly 9:16 JPEG (2K resolution)
 - **Batch Processing** — Select 1 or 1000 files, press the hotkey
 - **Adjustable Quality** — Slider from 0% to 100% JPEG quality
@@ -57,16 +55,14 @@ A floating progress panel shows real-time status — then disappears automatical
 | WebP | JPG | Web images |
 | JPG / JPEG | JPG | Re-compressed at your chosen quality |
 | PDF | JPG (per page) | Each page exported as a separate image |
-| Word (.docx) | JPG (per page) | Each page rendered as a separate image |
-| Excel (.xlsx) | JPG (per sheet) | Each worksheet rendered as a separate image |
 | Markdown (.md) | JPG | Single or multi-page (9:16 ratio, 2K resolution) |
 
 ## Roadmap
 
 | Format | Status |
 |---|---|
-| Word (.docx) | ✅ Done |
-| Excel (.xlsx) | ✅ Done |
+| Word (.docx) | Planned |
+| Excel (.xlsx) | Planned |
 | PowerPoint (.pptx) | Planned |
 | Markdown (.md) | ✅ Done |
 

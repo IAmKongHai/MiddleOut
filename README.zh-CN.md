@@ -37,8 +37,6 @@ MiddleOut 静默运行在后台。需要转换文件时：
 - **全局快捷键** — 在任何应用中均可触发，无需切换。默认：`Ctrl + Option + J`（可自定义）
 - **图片转换** — 将 HEIC、PNG、TIFF、WebP 转换为压缩后的 JPG（HEIC转JPG Mac 首选工具）
 - **PDF 转 JPG** — 将 PDF 每一页单独导出为 JPG 图片
-- **Word 转 JPG** — 将 .docx 每一页渲染为 JPEG 图片
-- **Excel 转 JPG** — 将 .xlsx 每个工作表渲染为 JPEG 图片
 - **Markdown 转 JPG** — 将 .md 转换为适合移动端的 9:16 JPEG（2K 分辨率）
 - **批量处理** — 选中 1 个或 1000 个文件，按下快捷键即可
 - **可调节质量** — JPEG 质量滑块，范围 0% 至 100%
@@ -55,16 +53,14 @@ MiddleOut 静默运行在后台。需要转换文件时：
 | WebP | JPG | 网络图片 |
 | JPG / JPEG | JPG | 按所选质量重新压缩 |
 | PDF | JPG（每页） | 每页单独导出为一张图片 |
-| Word (.docx) | JPG（每页） | 每页渲染为一张单独的图片 |
-| Excel (.xlsx) | JPG（每工作表） | 每个工作表渲染为一张单独的图片 |
 | Markdown (.md) | JPG | 单页或多页（9:16 比例，2K 分辨率） |
 
 ## 路线图
 
 | 格式 | 状态 |
 |---|---|
-| Word (.docx) | ✅ 已完成 |
-| Excel (.xlsx) | ✅ 已完成 |
+| Word (.docx) | 计划中 |
+| Excel (.xlsx) | 计划中 |
 | PowerPoint (.pptx) | 计划中 |
 | Markdown (.md) | ✅ 已完成 |
 
