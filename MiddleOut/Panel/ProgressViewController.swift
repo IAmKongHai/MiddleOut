@@ -86,7 +86,7 @@ class ProgressViewController: NSViewController {
 
         titleLabel.stringValue = "Done!"
         titleLabel.textColor = .systemGreen
-        subtitleLabel.stringValue = "\(summary.convertedCount + summary.skippedFiles.count) files processed"
+        subtitleLabel.stringValue = "\(summary.convertedCount) files → \(summary.totalOutputImages) images"
 
         fileLabel.isHidden = true
         progressBar.doubleValue = 1.0

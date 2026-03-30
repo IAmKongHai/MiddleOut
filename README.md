@@ -39,6 +39,7 @@ A floating progress panel shows real-time status — then disappears automatical
 - **Global Hotkey** — Works from anywhere, no need to switch apps. Default: `Ctrl + Option + J` (customizable)
 - **Image Conversion** — HEIC, PNG, TIFF, WebP to compressed JPG
 - **PDF to JPG** — Extracts every page as a separate JPG image
+- **Markdown to JPG** — Converts .md to mobile-friendly 9:16 JPEG (2K resolution)
 - **Batch Processing** — Select 1 or 1000 files, press the hotkey
 - **Adjustable Quality** — Slider from 0% to 100% JPEG quality
 - **Non-destructive** — Original files are never modified. Output files are named `filename_opt.jpg`
@@ -54,17 +55,16 @@ A floating progress panel shows real-time status — then disappears automatical
 | WebP | JPG | Web images |
 | JPG / JPEG | JPG | Re-compressed at your chosen quality |
 | PDF | JPG (per page) | Each page exported as a separate image |
+| Markdown (.md) | JPG | Single or multi-page (9:16 ratio, 2K resolution) |
 
 ## Roadmap
-
-Planned formats for future versions:
 
 | Format | Status |
 |---|---|
 | Word (.docx) | Planned |
 | Excel (.xlsx) | Planned |
 | PowerPoint (.pptx) | Planned |
-| Markdown (.md) | Planned |
+| Markdown (.md) | ✅ Done |
 
 ## Installation
 
@@ -137,10 +137,11 @@ AppDelegate ──> ProgressPanel.show()
 FinderBridge ──> AppleScript ──> Finder selection [URL]
     |
     v
-FileRouter ──> classify by extension
+FileRouter ���─> classify by magic bytes + ZIP structure
     |
     v
-ImageProcessor / PDFProcessor ──> output _opt.jpg
+ImageProcessor / PDFProcessor / WordProcessor
+ExcelProcessor / MarkdownProcessor ��─> output _opt.jpg
     |
     v (main thread)
 ProgressPanel ──> update / complete / auto-dismiss

@@ -37,6 +37,7 @@ MiddleOut 静默运行在后台。需要转换文件时：
 - **全局快捷键** — 在任何应用中均可触发，无需切换。默认：`Ctrl + Option + J`（可自定义）
 - **图片转换** — 将 HEIC、PNG、TIFF、WebP 转换为压缩后的 JPG（HEIC转JPG Mac 首选工具）
 - **PDF 转 JPG** — 将 PDF 每一页单独导出为 JPG 图片
+- **Markdown 转 JPG** — 将 .md 转换为适合移动端的 9:16 JPEG（2K 分辨率）
 - **批量处理** — 选中 1 个或 1000 个文件，按下快捷键即可
 - **可调节质量** — JPEG 质量滑块，范围 0% 至 100%
 - **非破坏性处理** — 原始文件永远不会被修改。输出文件命名为 `文件名_opt.jpg`
@@ -52,17 +53,16 @@ MiddleOut 静默运行在后台。需要转换文件时：
 | WebP | JPG | 网络图片 |
 | JPG / JPEG | JPG | 按所选质量重新压缩 |
 | PDF | JPG（每页） | 每页单独导出为一张图片 |
+| Markdown (.md) | JPG | 单页或多页（9:16 比例，2K 分辨率） |
 
 ## 路线图
-
-未来版本计划支持的格式：
 
 | 格式 | 状态 |
 |---|---|
 | Word (.docx) | 计划中 |
 | Excel (.xlsx) | 计划中 |
 | PowerPoint (.pptx) | 计划中 |
-| Markdown (.md) | 计划中 |
+| Markdown (.md) | ✅ 已完成 |
 
 ## 安装
 
@@ -135,10 +135,11 @@ AppDelegate ──> ProgressPanel.show()
 FinderBridge ──> AppleScript ──> Finder 选中项 [URL]
     |
     v
-FileRouter ──> 按扩展名分类
+FileRouter ──> 按魔数字节 + ZIP 结构分类
     |
     v
-ImageProcessor / PDFProcessor ──> 输出 _opt.jpg
+ImageProcessor / PDFProcessor / WordProcessor
+ExcelProcessor / MarkdownProcessor ──> 输出 _opt.jpg
     |
     v（主线程）
 ProgressPanel ──> 更新 / 完成 / 自动消失

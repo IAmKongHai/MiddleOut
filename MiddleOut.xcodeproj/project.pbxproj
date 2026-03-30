@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E7C98E12F7A77A000C70080 /* cmark-gfm in Frameworks */ = {isa = PBXBuildFile; productRef = 8E7C98E02F7A77A000C70080 /* cmark-gfm */; };
+		8E7C98F02F7B000000C70080 /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 8E7C98EF2F7B000000C70080 /* CoreXLSX */; };
 		8EE5DC2E2F7860FB0053ACE8 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E7C98E12F7A77A000C70080 /* cmark-gfm in Frameworks */,
+				8E7C98F02F7B000000C70080 /* CoreXLSX in Frameworks */,
 				8EE5DC2E2F7860FB0053ACE8 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,6 +121,8 @@
 			);
 			name = MiddleOut;
 			packageProductDependencies = (
+				8E7C98E02F7A77A000C70080 /* cmark-gfm */,
+				8E7C98EF2F7B000000C70080 /* CoreXLSX */,
 				8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */,
 			);
 			productName = MiddleOut;
@@ -203,6 +209,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				8EE5DBCA2F785D880053ACE8 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				8E7C98DD2F7A75DD00C70080 /* XCRemoteSwiftPackageReference "CoreXLSX" */,
+				8E7C98DF2F7A76DF00C70080 /* XCRemoteSwiftPackageReference "swift-cmark" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8EE5DBA12F785D860053ACE8 /* Products */;
@@ -421,7 +429,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = middleout.konghai.me.MiddleOut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -457,7 +465,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = middleout.konghai.me.MiddleOut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -479,7 +487,7 @@
 				DEVELOPMENT_TEAM = 2ZSNV9MWK6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = middleout.konghai.me.MiddleOutTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -500,7 +508,7 @@
 				DEVELOPMENT_TEAM = 2ZSNV9MWK6;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = middleout.konghai.me.MiddleOutTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -519,7 +527,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2ZSNV9MWK6;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = middleout.konghai.me.MiddleOutUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -538,7 +546,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2ZSNV9MWK6;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = middleout.konghai.me.MiddleOutUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -592,6 +600,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8E7C98DD2F7A75DD00C70080 /* XCRemoteSwiftPackageReference "CoreXLSX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CoreOffice/CoreXLSX.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.2;
+			};
+		};
+		8E7C98DF2F7A76DF00C70080 /* XCRemoteSwiftPackageReference "swift-cmark" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftlang/swift-cmark.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.1;
+			};
+		};
 		8EE5DBCA2F785D880053ACE8 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
@@ -603,6 +627,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8E7C98E02F7A77A000C70080 /* cmark-gfm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8E7C98DF2F7A76DF00C70080 /* XCRemoteSwiftPackageReference "swift-cmark" */;
+			productName = "cmark-gfm";
+		};
+		8E7C98EF2F7B000000C70080 /* CoreXLSX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8E7C98DD2F7A75DD00C70080 /* XCRemoteSwiftPackageReference "CoreXLSX" */;
+			productName = CoreXLSX;
+		};
 		8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = KeyboardShortcuts;
