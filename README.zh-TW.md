@@ -37,6 +37,9 @@ MiddleOut 靜默在背景執行。需要轉換檔案時：
 - **全域快速鍵** — 在任何應用程式中均可觸發，無需切換。預設：`Ctrl + Option + J`（可自訂）
 - **圖片轉換** — 將 HEIC、PNG、TIFF、WebP 轉換為壓縮後的 JPG（HEIC轉JPG Mac 首選工具）
 - **PDF 轉 JPG** — 將 PDF 每一頁分別匯出為 JPG 圖片
+- **Word 轉 JPG** — 將 .docx 每一頁渲染為 JPEG 圖片
+- **Excel 轉 JPG** — 將 .xlsx 每個工作表渲染為 JPEG 圖片
+- **Markdown 轉 JPG** — 將 .md 轉換為適合行動裝置的 9:16 JPEG（2K 解析度）
 - **批次處理** — 選取 1 個或 1000 個檔案，按下快速鍵即可
 - **可調整品質** — JPEG 品質滑桿，範圍 0% 至 100%
 - **非破壞性處理** — 原始檔案永遠不會被修改。輸出檔案命名為 `檔名_opt.jpg`
@@ -52,17 +55,18 @@ MiddleOut 靜默在背景執行。需要轉換檔案時：
 | WebP | JPG | 網路圖片 |
 | JPG / JPEG | JPG | 按所選品質重新壓縮 |
 | PDF | JPG（每頁） | 每頁分別匯出為一張圖片 |
+| Word (.docx) | JPG（每頁） | 每頁渲染為一張單獨的圖片 |
+| Excel (.xlsx) | JPG（每工作表） | 每個工作表渲染為一張單獨的圖片 |
+| Markdown (.md) | JPG | 單頁或多頁（9:16 比例，2K 解析度） |
 
 ## 開發藍圖
 
-未來版本計畫支援的格式：
-
 | 格式 | 狀態 |
 |---|---|
-| Word (.docx) | 計畫中 |
-| Excel (.xlsx) | 計畫中 |
+| Word (.docx) | ✅ 已完成 |
+| Excel (.xlsx) | ✅ 已完成 |
 | PowerPoint (.pptx) | 計畫中 |
-| Markdown (.md) | 計畫中 |
+| Markdown (.md) | ✅ 已完成 |
 
 ## 安裝
 
@@ -135,10 +139,11 @@ AppDelegate ──> ProgressPanel.show()
 FinderBridge ──> AppleScript ──> Finder 選取項目 [URL]
     |
     v
-FileRouter ──> 依副檔名分類
+FileRouter ──> 依魔數位元組 + ZIP 結構分類
     |
     v
-ImageProcessor / PDFProcessor ──> 輸出 _opt.jpg
+ImageProcessor / PDFProcessor / WordProcessor
+ExcelProcessor / MarkdownProcessor ──> 輸出 _opt.jpg
     |
     v（主執行緒）
 ProgressPanel ──> 更新 / 完成 / 自動消失
