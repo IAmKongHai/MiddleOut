@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E7C98E12F7A77A000C70080 /* cmark-gfm in Frameworks */ = {isa = PBXBuildFile; productRef = 8E7C98E02F7A77A000C70080 /* cmark-gfm */; };
+		8E7C98F02F7B000000C70080 /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 8E7C98EF2F7B000000C70080 /* CoreXLSX */; };
 		8EE5DC2E2F7860FB0053ACE8 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E7C98E12F7A77A000C70080 /* cmark-gfm in Frameworks */,
+				8E7C98F02F7B000000C70080 /* CoreXLSX in Frameworks */,
 				8EE5DC2E2F7860FB0053ACE8 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,6 +121,8 @@
 			);
 			name = MiddleOut;
 			packageProductDependencies = (
+				8E7C98E02F7A77A000C70080 /* cmark-gfm */,
+				8E7C98EF2F7B000000C70080 /* CoreXLSX */,
 				8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */,
 			);
 			productName = MiddleOut;
@@ -621,6 +627,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8E7C98E02F7A77A000C70080 /* cmark-gfm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8E7C98DF2F7A76DF00C70080 /* XCRemoteSwiftPackageReference "swift-cmark" */;
+			productName = "cmark-gfm";
+		};
+		8E7C98EF2F7B000000C70080 /* CoreXLSX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8E7C98DD2F7A75DD00C70080 /* XCRemoteSwiftPackageReference "CoreXLSX" */;
+			productName = CoreXLSX;
+		};
 		8EE5DBCB2F785D880053ACE8 /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = KeyboardShortcuts;
