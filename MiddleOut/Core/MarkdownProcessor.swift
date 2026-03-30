@@ -167,10 +167,14 @@ struct MarkdownProcessor {
         var renderResult: WebViewRenderer.RenderResult?
         var renderError: Error?
 
-        if Thread.isMainThread {
+        let isMain = Thread.isMainThread
+        DebugLog.log("renderSync called, isMainThread=\(isMain)")
+
+        if isMain {
             // 主线程：RunLoop pumping
             var finished = false
             WebViewRenderer.renderAsync(options) { outcome in
+                DebugLog.log("renderAsync callback (main path)")
                 switch outcome {
                 case .success(let r): renderResult = r
                 case .failure(let e): renderError = e
@@ -187,8 +191,11 @@ struct MarkdownProcessor {
         } else {
             // 后台线程：semaphore + main async
             let semaphore = DispatchSemaphore(value: 0)
+            DebugLog.log("renderSync: dispatching to main queue via semaphore")
             DispatchQueue.main.async {
+                DebugLog.log("renderSync: main.async block executing")
                 WebViewRenderer.renderAsync(options) { outcome in
+                    DebugLog.log("renderAsync callback (bg path), success=\(outcome)")
                     switch outcome {
                     case .success(let r): renderResult = r
                     case .failure(let e): renderError = e
@@ -196,7 +203,9 @@ struct MarkdownProcessor {
                     semaphore.signal()
                 }
             }
-            if semaphore.wait(timeout: .now() + timeout) == .timedOut {
+            let waitResult = semaphore.wait(timeout: .now() + timeout)
+            DebugLog.log("renderSync: semaphore wait result=\(waitResult == .timedOut ? "TIMEOUT" : "signaled")")
+            if waitResult == .timedOut {
                 throw WebViewRendererError.renderTimeout
             }
         }

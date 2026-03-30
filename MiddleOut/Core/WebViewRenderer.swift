@@ -26,6 +26,18 @@ enum WebViewRendererError: Error, LocalizedError {
 /// 每次渲染创建全新的 WKWebView 实例，不复用。
 struct WebViewRenderer {
 
+    /// 持有活跃的 WKWebView 实例，防止渲染过程中 webView 被 ARC 释放。
+    /// 渲染完成后从集合中移除。
+    private static var activeWebViews = Set<WebViewRef>()
+
+    /// 包装 WKWebView 使其可加入 Set（通过 ObjectIdentifier）
+    private class WebViewRef: Hashable {
+        let webView: WKWebView
+        init(_ webView: WKWebView) { self.webView = webView }
+        static func == (lhs: WebViewRef, rhs: WebViewRef) -> Bool { lhs === rhs }
+        func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
+    }
+
     /// 渲染选项，包含 HTML 内容、视口尺寸和可选的 baseURL
     struct RenderOptions {
         let html: String
@@ -151,19 +163,26 @@ struct WebViewRenderer {
             configuration: config
         )
 
+        // 将 webView 加入活跃集合，防止 ARC 在函数返回后释放
+        let ref = WebViewRef(webView)
+        activeWebViews.insert(ref)
+
         let delegate = WebViewLoadDelegate()
         webView.navigationDelegate = delegate
 
         // 通过关联对象强引用 delegate，防止 navigationDelegate (weak) 被提前释放
         objc_setAssociatedObject(webView, "navDelegate", delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
-        // 加载完成后根据是否需要自动高度检测来决定截图流程
-        delegate.onFinish = { [weak webView] in
-            guard let webView = webView else {
-                completion(.failure(WebViewRendererError.snapshotFailed))
-                return
-            }
+        /// 渲染完成后的清理：从活跃集合移除，释放 delegate
+        let cleanup = {
+            objc_setAssociatedObject(webView, "navDelegate", nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            webView.navigationDelegate = nil
+            webView.removeFromSuperview()
+            activeWebViews.remove(ref)
+        }
 
+        // 加载完成后根据是否需要自动高度检测来决定截图流程
+        delegate.onFinish = {
             if options.viewportHeight == nil {
                 // 自动检测内容高度
                 webView.evaluateJavaScript(
@@ -180,15 +199,22 @@ struct WebViewRenderer {
                     )
                     // 短暂延迟确保布局更新完成
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        takeSnapshot(webView: webView, size: webView.frame.size, completion: completion)
+                        takeSnapshot(webView: webView, size: webView.frame.size) { result in
+                            cleanup()
+                            completion(result)
+                        }
                     }
                 }
             } else {
-                takeSnapshot(webView: webView, size: webView.frame.size, completion: completion)
+                takeSnapshot(webView: webView, size: webView.frame.size) { result in
+                    cleanup()
+                    completion(result)
+                }
             }
         }
 
         delegate.onFail = { error in
+            cleanup()
             completion(.failure(WebViewRendererError.webViewLoadFailed(error.localizedDescription)))
         }
 
@@ -210,10 +236,6 @@ struct WebViewRenderer {
             } else {
                 completion(.failure(WebViewRendererError.snapshotFailed))
             }
-            // 清理：释放关联的 delegate，断开引用，移除 webView
-            objc_setAssociatedObject(webView, "navDelegate", nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            webView.navigationDelegate = nil
-            webView.removeFromSuperview()
         }
     }
 }
