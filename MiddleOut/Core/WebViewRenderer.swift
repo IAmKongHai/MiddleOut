@@ -221,7 +221,8 @@ struct WebViewRenderer {
         webView.loadHTMLString(options.html, baseURL: options.baseURL)
     }
 
-    /// 对 WKWebView 进行截图并返回结果
+    /// 对 WKWebView 进行截图并返回结果。
+    /// 截图后将像素缩放到视口尺寸（1x），确保输出分辨率不受显示器 backingScaleFactor 影响。
     private static func takeSnapshot(
         webView: WKWebView,
         size: CGSize,
@@ -231,11 +232,51 @@ struct WebViewRenderer {
         snapshotConfig.rect = NSRect(origin: .zero, size: size)
 
         webView.takeSnapshot(with: snapshotConfig) { image, error in
-            if let image = image {
-                completion(.success(RenderResult(image: image, actualSize: size)))
-            } else {
+            guard let image = image else {
                 completion(.failure(WebViewRendererError.snapshotFailed))
+                return
             }
+
+            // WKWebView 按屏幕 backingScaleFactor 渲染，4K 屏幕会产生 2x 像素。
+            // 将 CGImage 缩放到目标视口尺寸（1x），确保输出一致。
+            let targetWidth = Int(size.width)
+            let targetHeight = Int(size.height)
+
+            guard let srcCGImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                completion(.failure(WebViewRendererError.snapshotFailed))
+                return
+            }
+
+            // 如果像素尺寸已经匹配目标，直接使用
+            if srcCGImage.width == targetWidth && srcCGImage.height == targetHeight {
+                completion(.success(RenderResult(image: image, actualSize: size)))
+                return
+            }
+
+            // 重绘到 1x 尺寸的 CGContext
+            guard let context = CGContext(
+                data: nil,
+                width: targetWidth,
+                height: targetHeight,
+                bitsPerComponent: 8,
+                bytesPerRow: 0,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue
+            ) else {
+                completion(.failure(WebViewRendererError.snapshotFailed))
+                return
+            }
+
+            context.interpolationQuality = .high
+            context.draw(srcCGImage, in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
+
+            guard let scaledCGImage = context.makeImage() else {
+                completion(.failure(WebViewRendererError.snapshotFailed))
+                return
+            }
+
+            let scaledImage = NSImage(cgImage: scaledCGImage, size: size)
+            completion(.success(RenderResult(image: scaledImage, actualSize: size)))
         }
     }
 }
