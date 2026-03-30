@@ -16,6 +16,7 @@ struct ProcessingProgress {
 /// Final summary data
 struct ProcessingSummary {
     let convertedCount: Int
+    let totalOutputImages: Int
     let skippedFiles: [(name: String, reason: String)]
     let totalBytesSaved: Int64
 }
@@ -85,13 +86,20 @@ class ProcessingCoordinator {
         // Classify files
         let classified = FileRouter.classify(urls)
         let allProcessable = classified.images + classified.pdfs
+            + classified.words + classified.excels
+            + classified.markdowns
         var allSkipped = classified.skipped.map { ($0.url.lastPathComponent, $0.reason) }
+        // PPT files are skipped (deferred)
+        for pptURL in classified.ppts {
+            allSkipped.append((pptURL.lastPathComponent, "PowerPoint support coming soon"))
+        }
 
         guard !allProcessable.isEmpty else {
             DispatchQueue.main.async {
                 self.isProcessing = false
                 self.onCompleted?(ProcessingSummary(
                     convertedCount: 0,
+                    totalOutputImages: 0,
                     skippedFiles: allSkipped,
                     totalBytesSaved: 0
                 ))
@@ -105,6 +113,7 @@ class ProcessingCoordinator {
         DebugLog.log("Processing \(totalCount) files at quality \(quality)")
 
         var convertedCount = 0
+        var totalOutputImages = 0
         var totalBytesSaved: Int64 = 0
 
         for (index, url) in allProcessable.enumerated() {
@@ -121,21 +130,51 @@ class ProcessingCoordinator {
                 ))
             }
 
-            let ext = url.pathExtension.lowercased()
-            let isPDF = (ext == "pdf")
-
             do {
-                if isPDF {
-                    DebugLog.log("Processing PDF: \(fileName)")
-                    let results = try PDFProcessor.process(at: url, quality: quality)
-                    for result in results {
-                        totalBytesSaved += result.bytesSaved
-                    }
-                    convertedCount += 1
-                } else {
+                guard let category = FileRouter.identifyCategory(url) else {
+                    allSkipped.append((fileName, "unsupported format"))
+                    continue
+                }
+
+                switch category {
+                case .image:
                     DebugLog.log("Processing image: \(fileName)")
                     let result = try ImageProcessor.process(at: url, quality: quality)
                     totalBytesSaved += result.bytesSaved
+                    totalOutputImages += 1
+                    convertedCount += 1
+
+                case .pdf:
+                    DebugLog.log("Processing PDF: \(fileName)")
+                    let results = try PDFProcessor.process(at: url, quality: quality)
+                    for result in results { totalBytesSaved += result.bytesSaved }
+                    totalOutputImages += results.count
+                    convertedCount += 1
+
+                case .word:
+                    DebugLog.log("Processing Word: \(fileName)")
+                    let results = try WordProcessor.process(at: url, quality: quality)
+                    for result in results { totalBytesSaved += result.bytesSaved }
+                    totalOutputImages += results.count
+                    convertedCount += 1
+
+                case .excel:
+                    DebugLog.log("Processing Excel: \(fileName)")
+                    let results = try ExcelProcessor.process(at: url, quality: quality)
+                    for result in results { totalBytesSaved += result.bytesSaved }
+                    totalOutputImages += results.count
+                    convertedCount += 1
+
+                case .ppt:
+                    // PPT support deferred
+                    DebugLog.log("Skipping PPT (deferred): \(fileName)")
+                    allSkipped.append((fileName, "PowerPoint support coming soon"))
+
+                case .markdown:
+                    DebugLog.log("Processing Markdown: \(fileName)")
+                    let results = try MarkdownProcessor.process(at: url, quality: quality)
+                    for result in results { totalBytesSaved += result.bytesSaved }
+                    totalOutputImages += results.count
                     convertedCount += 1
                 }
             } catch {
@@ -147,6 +186,7 @@ class ProcessingCoordinator {
 
         let summary = ProcessingSummary(
             convertedCount: convertedCount,
+            totalOutputImages: totalOutputImages,
             skippedFiles: allSkipped,
             totalBytesSaved: totalBytesSaved
         )
