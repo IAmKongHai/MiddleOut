@@ -203,6 +203,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				8EE5DBCA2F785D880053ACE8 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				8E7C98DD2F7A75DD00C70080 /* XCRemoteSwiftPackageReference "CoreXLSX" */,
+				8E7C98DF2F7A76DF00C70080 /* XCRemoteSwiftPackageReference "swift-cmark" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8EE5DBA12F785D860053ACE8 /* Products */;
@@ -592,6 +594,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8E7C98DD2F7A75DD00C70080 /* XCRemoteSwiftPackageReference "CoreXLSX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CoreOffice/CoreXLSX.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.2;
+			};
+		};
+		8E7C98DF2F7A76DF00C70080 /* XCRemoteSwiftPackageReference "swift-cmark" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftlang/swift-cmark.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.1;
+			};
+		};
 		8EE5DBCA2F785D880053ACE8 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
