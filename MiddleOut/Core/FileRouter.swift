@@ -120,6 +120,14 @@ struct FileRouter {
             return identifyZIPContent(at: url)
         }
 
+        // OLE2 Compound Document: D0 CF 11 E0 — legacy .doc format
+        // NSAttributedString supports loading .doc files
+        if bytes.count >= 4 && bytes[0] == 0xD0 && bytes[1] == 0xCF && bytes[2] == 0x11 && bytes[3] == 0xE0 {
+            let ext = url.pathExtension.lowercased()
+            if ext == "doc" { return .word }
+            // .xls / .ppt legacy formats not supported — fall through to nil
+        }
+
         // Fallback: extension-based check for plain text formats
         let ext = url.pathExtension.lowercased()
         if markdownExtensions.contains(ext) {
