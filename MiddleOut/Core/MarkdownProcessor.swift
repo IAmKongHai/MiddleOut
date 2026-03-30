@@ -157,18 +157,19 @@ struct MarkdownProcessor {
         }
     }
 
-    /// 同步渲染，通过 renderAsync + RunLoop 驱动方式实现。
-    /// 兼容主线程调用（避免 semaphore 死锁），也兼容后台线程调用。
+    /// 同步渲染，兼容主线程和后台线程调用。
+    /// - 主线程：使用 RunLoop pumping（避免 semaphore 死锁主线程）
+    /// - 后台线程：使用 DispatchSemaphore（后台线程无法驱动主线程 RunLoop）
     private static func renderSync(
         _ options: WebViewRenderer.RenderOptions,
         timeout: TimeInterval = 30
     ) throws -> WebViewRenderer.RenderResult {
         var renderResult: WebViewRenderer.RenderResult?
         var renderError: Error?
-        var finished = false
 
-        // 确保渲染调用在主线程上执行
-        let startRender = {
+        if Thread.isMainThread {
+            // 主线程：RunLoop pumping
+            var finished = false
             WebViewRenderer.renderAsync(options) { outcome in
                 switch outcome {
                 case .success(let r): renderResult = r
@@ -176,23 +177,30 @@ struct MarkdownProcessor {
                 }
                 finished = true
             }
-        }
-
-        if Thread.isMainThread {
-            startRender()
+            let deadline = Date(timeIntervalSinceNow: timeout)
+            while !finished && Date() < deadline {
+                RunLoop.main.run(mode: .default, before: Date(timeIntervalSinceNow: 0.05))
+            }
+            if !finished {
+                throw WebViewRendererError.renderTimeout
+            }
         } else {
-            DispatchQueue.main.async { startRender() }
+            // 后台线程：semaphore + main async
+            let semaphore = DispatchSemaphore(value: 0)
+            DispatchQueue.main.async {
+                WebViewRenderer.renderAsync(options) { outcome in
+                    switch outcome {
+                    case .success(let r): renderResult = r
+                    case .failure(let e): renderError = e
+                    }
+                    semaphore.signal()
+                }
+            }
+            if semaphore.wait(timeout: .now() + timeout) == .timedOut {
+                throw WebViewRendererError.renderTimeout
+            }
         }
 
-        // 手动驱动 RunLoop 直到渲染完成或超时
-        let deadline = Date(timeIntervalSinceNow: timeout)
-        while !finished && Date() < deadline {
-            RunLoop.main.run(mode: .default, before: Date(timeIntervalSinceNow: 0.05))
-        }
-
-        if !finished {
-            throw WebViewRendererError.renderTimeout
-        }
         if let error = renderError {
             throw error
         }
